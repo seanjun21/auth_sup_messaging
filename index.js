@@ -17,19 +17,36 @@ app.get('/users', function(request, response) {
         response.json(users);
     });
 });
+
+// POST request for array of users
+app.post('/users', jsonParser, function(request, response) {
+     if (!request.body.username) {
+        response.status(422).json({message: 'Missing field: username'});
+        return;
+        }
+        if (typeof request.body.username !== 'string') {
+            response.status(422).json({message: 'Incorrect field type: username'});
+            return;    
+        }
+    User.create({username: request.body.username}, function(error, user) {
+       if (error) {
+            response.sendStatus(422);
+            return;
+        }
+        response.status(201).header('Location', '/users/' + user._id).json({});
+    });
+});
+
+
 // GET request for specific user
 app.get('/users/:userID', function(request, response) {
-    
-    console.log(request.params.userID);
     User.find({
         _id: request.params.userID
     }, function(error, user) {
         if (!user[0]    ) {
-            console.log("here");
             response.status(404).json({message: "User not found"});
             return;
         }
-        console.log(user, "<---user");
         response.json(user[0]);
     });
 });
