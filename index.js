@@ -125,7 +125,52 @@ app.get('/messages', function(request, response) {
     });
 });
 
+app.post('/messages', jsonParser, function(request, response) {
+    if (!request.body.text) {
+        response.status(422).json({
+            message: 'Missing field: text'
+        });
 
+    }
+    else if (typeof request.body.text !== 'string') {
+        response.status(422).json({
+            message: 'Incorrect field type: text'
+        });
+
+    }
+    else if (typeof request.body.to !== 'string') {
+        response.status(422).json({
+            message: 'Incorrect field type: to'
+        });
+
+    }
+    else if (typeof request.body.from !== 'string') {
+        response.status(422).json({
+            message: 'Incorrect field type: from'
+        });
+
+    }
+    else if (!User.findById({_id: request.body.to})) {
+        response.status(422).json({
+            message: 'Incorrect field value: to'
+        });
+    }
+    else if (!request.body.from) {
+        response.status(422).json({
+            message: 'Incorrect field value: from'
+        });
+
+    }
+    else {
+        Message.create(request.body, function(error, message) {
+            if (error) {
+                response.sendStatus(500);
+                return;
+            }
+            response.status(201).header('Location', '/messages/' + message._id).json({});
+        }); 
+    }
+});
 
 /*------------ RUN SERVER ------------*/
 
