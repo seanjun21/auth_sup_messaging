@@ -116,6 +116,7 @@ app.delete('/users/:userID', jsonParser, function(request, response) {
 
 // GET request for messages to/from a user w/ corresponding ObjectID
 app.get('/messages', function(request, response) {
+  
     Message.find(request.query).populate('from to').exec(function(error, messages) {
         if (error) {
             response.sendStatus(500);
@@ -125,42 +126,45 @@ app.get('/messages', function(request, response) {
     });
 });
 
+// POST request for messages
 app.post('/messages', jsonParser, function(request, response) {
+// No text for the message
     if (!request.body.text) {
         response.status(422).json({
             message: 'Missing field: text'
         });
-
     }
+// Message text is non-string
     else if (typeof request.body.text !== 'string') {
         response.status(422).json({
             message: 'Incorrect field type: text'
         });
-
     }
+// to field is non-string
     else if (typeof request.body.to !== 'string') {
         response.status(422).json({
             message: 'Incorrect field type: to'
         });
-
     }
+// from field is non-string
     else if (typeof request.body.from !== 'string') {
         response.status(422).json({
             message: 'Incorrect field type: from'
         });
-
     }
-    else if (!User.findById({_id: request.body.to})) {
-        response.status(422).json({
-            message: 'Incorrect field value: to'
-        });
-    }
-    else if (!request.body.from) {
-        response.status(422).json({
-            message: 'Incorrect field value: from'
-        });
-
-    }
+// // non-existent user for 'to' field
+//     else if (User.findById({_id: request.body.to})) {
+//         response.status(422).json({
+//             message: 'Incorrect field value: to'
+//         });
+//     }
+// // non-existent user for 'from' field
+//     else if (User.findById({_id: request.body.from})) {
+//         response.status(422).json({
+//             message: 'Incorrect field value: from'
+//         });
+//     }
+// if all tests pass, do POST request
     else {
         Message.create(request.body, function(error, message) {
             if (error) {
