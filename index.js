@@ -23,11 +23,11 @@ app.post('/users', jsonParser, function(request, response) {
      if (!request.body.username) {
         response.status(422).json({message: 'Missing field: username'});
         return;
-        }
-        if (typeof request.body.username !== 'string') {
-            response.status(422).json({message: 'Incorrect field type: username'});
-            return;    
-        }
+    }
+    if (typeof request.body.username !== 'string') {
+        response.status(422).json({message: 'Incorrect field type: username'});
+        return;    
+    }
     User.create({username: request.body.username}, function(error, user) {
        if (error) {
             response.sendStatus(422);
@@ -48,6 +48,33 @@ app.get('/users/:userID', function(request, response) {
             return;
         }
         response.json(user[0]);
+    });
+});
+
+// PUT request to add or edit a user.
+app.put('/users/:userID', jsonParser, function(request, response) {
+    if (!request.body.username) {
+        response.status(422).json({message: 'Missing field: username'});
+        return;
+    }
+    if (typeof request.body.username !== 'string') {
+        response.status(422).json({message: 'Incorrect field type: username'});
+        return;    
+    }
+    User.findOneAndUpdate({_id: request.params.userID}, {username: request.body.username}, function(error, user){
+        if(!user){
+            var newUser = {
+                _id: request.params.userID, 
+                username: request.body.username
+            };
+            User.create(newUser, function(error, user) {
+                if(error) {
+                    response.sendStatus(500);
+                    return;
+                }
+            });   
+        }
+        response.json({});
     });
 });
 
