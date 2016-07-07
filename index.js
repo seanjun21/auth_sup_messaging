@@ -116,7 +116,7 @@ app.delete('/users/:userID', jsonParser, function(request, response) {
 
 // GET request for messages to/from a user w/ corresponding ObjectID
 app.get('/messages', function(request, response) {
-  
+
     Message.find(request.query).populate('from to').exec(function(error, messages) {
         if (error) {
             response.sendStatus(500);
@@ -128,52 +128,75 @@ app.get('/messages', function(request, response) {
 
 // POST request for messages
 app.post('/messages', jsonParser, function(request, response) {
-// No text for the message
+    var toFieldisValidID = true;
+    var fromFieldisValidID = true;
+
+
+
+    // No text for the message
     if (!request.body.text) {
         response.status(422).json({
             message: 'Missing field: text'
         });
+        return;
     }
-// Message text is non-string
-    else if (typeof request.body.text !== 'string') {
+    // Message text is non-string
+    if (typeof request.body.text !== 'string') {
         response.status(422).json({
             message: 'Incorrect field type: text'
         });
+        return;
     }
-// to field is non-string
-    else if (typeof request.body.to !== 'string') {
+    // to field is non-string
+    if (typeof request.body.to !== 'string') {
         response.status(422).json({
             message: 'Incorrect field type: to'
         });
+        return;
     }
-// from field is non-string
-    else if (typeof request.body.from !== 'string') {
+    // from field is non-string
+    if (typeof request.body.from !== 'string') {
         response.status(422).json({
             message: 'Incorrect field type: from'
         });
+        return;
     }
-// // non-existent user for 'to' field
-//     else if (User.findById({_id: request.body.to})) {
-//         response.status(422).json({
-//             message: 'Incorrect field value: to'
-//         });
-//     }
-// // non-existent user for 'from' field
-//     else if (User.findById({_id: request.body.from})) {
-//         response.status(422).json({
-//             message: 'Incorrect field value: from'
-//         });
-//     }
-// if all tests pass, do POST request
-    else {
-        Message.create(request.body, function(error, message) {
-            if (error) {
-                response.sendStatus(500);
-                return;
-            }
-            response.status(201).header('Location', '/messages/' + message._id).json({});
-        }); 
-    }
+
+    // Test if from field contains an id for a non-existent user
+    User.findOne({
+        _id: request.body.from
+    }, function(error, users) {
+        // if it is a non-existent user return appropriate error
+        if (!users) {
+            response.status(422).json({
+                message: 'Incorrect field value: from'
+            });
+        }
+        // else test if to field contains an id for a non-existent user
+        else {
+            User.findOne({
+                _id: request.body.to
+            }, function(error, users) {
+                // if it is a non-existent user return appropriate error
+                if (!users) {
+                    response.status(422).json({
+                        message: 'Incorrect field value: to'
+                    });
+                }
+                // else we know both fields are valid users, create the message record
+                else {
+                    Message.create(request.body, function(error, message) {
+                        if (error) {
+                            response.sendStatus(500);
+                            return;
+                        }
+                        response.status(201).header('Location', '/messages/' + message._id).json({});
+                    });
+                }
+            });
+        }
+    });
+
 });
 
 /*------------ RUN SERVER ------------*/
