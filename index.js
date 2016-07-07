@@ -1,3 +1,4 @@
+/*----------- DEPENDENCIES -----------*/
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
@@ -197,6 +198,17 @@ app.post('/messages', jsonParser, function(request, response) {
         }
     });
 
+});
+
+// GET request for a single message by messageId
+app.get('/messages/:messageId', function(request, response) {
+    Message.findOne({_id: request.params.messageId}).populate('from to').exec(function(error, message) {
+        if (!message) {
+            response.status(404).json({message: 'Message not found'});
+            return;
+        }
+        response.json(message);
+    });
 });
 
 /*------------ RUN SERVER ------------*/
