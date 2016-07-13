@@ -367,7 +367,7 @@ describe( 'Message endpoints', function() {
         };
         // Add a message
         return chai.request( app )
-          .post( this.listPattern.stringify() )
+          .post( this.listPattern.stringify() ).auth( 'alice', 'iamalice' )
           .send( message )
           .then( function( res ) {
             // Check that an empty object was returned
@@ -404,7 +404,7 @@ describe( 'Message endpoints', function() {
         var spy = makeSpy();
         // Add a message without text
         return chai.request( app )
-          .post( this.listPattern.stringify() )
+          .post( this.listPattern.stringify() ).auth( 'alice', 'iamalice' )
           .send( message )
           .then( spy )
           .catch( function( err ) {
@@ -432,7 +432,7 @@ describe( 'Message endpoints', function() {
         var spy = makeSpy();
         // Add a message with non-string text
         return chai.request( app )
-          .post( this.listPattern.stringify() )
+          .post( this.listPattern.stringify() ).auth( 'alice', 'iamalice' )
           .send( message )
           .then( spy )
           .catch( function( err ) {
@@ -460,7 +460,7 @@ describe( 'Message endpoints', function() {
         var spy = makeSpy();
         // Add a message with non-string to
         return chai.request( app )
-          .post( this.listPattern.stringify() )
+          .post( this.listPattern.stringify() ).auth( 'alice', 'iamalice' )
           .send( message )
           .then( spy )
           .catch( function( err ) {
@@ -488,7 +488,7 @@ describe( 'Message endpoints', function() {
         var spy = makeSpy();
         // Add a message with non-string from
         return chai.request( app )
-          .post( this.listPattern.stringify() )
+          .post( this.listPattern.stringify() ).auth( 'alice', 'iamalice' )
           .send( message )
           .then( spy )
           .catch( function( err ) {
@@ -515,7 +515,7 @@ describe( 'Message endpoints', function() {
         };
         var spy = makeSpy();
         return chai.request( app )
-          .post( this.listPattern.stringify() )
+          .post( this.listPattern.stringify() ).auth( 'alice', 'iamalice' )
           .send( message )
           .then( spy )
           .catch( function( err ) {
@@ -543,7 +543,7 @@ describe( 'Message endpoints', function() {
         var spy = makeSpy();
         // Add a message to a non-existent user
         return chai.request( app )
-          .post( this.listPattern.stringify() )
+          .post( this.listPattern.stringify() ).auth( 'alice', 'iamalice' )
           .send( message )
           .then( spy )
           .catch( function( err ) {
