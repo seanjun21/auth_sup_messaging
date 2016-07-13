@@ -27,7 +27,7 @@ describe( 'User endpoints', function() {
 
   describe( '/users', function() {
     describe( 'GET', function() {
-      it.only( 'should return a list of users', function( done ) {
+      it( 'should return a list of users', function( done ) {
         bcrypt.genSalt( 10, function( error, salt ) {
           bcrypt.hash( 'userPassword', salt, function( error, hash ) {
             var user = {
@@ -59,10 +59,11 @@ describe( 'User endpoints', function() {
     describe( 'POST', function() {
       it( 'should allow adding a user', function() {
         var user = {
-          username: 'joe'
+          username: 'joe',
+          password: '123Password'
         };
 
-        // Add a user
+        // Create a user by sending the above object to the POST endpoint
         return chai.request( app )
           .post( this.listPattern.stringify() )
           .send( user )
