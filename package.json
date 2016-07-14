@@ -7,8 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha",
-    "start": "node index.js"
+    "test": "mocha"
   },
   "keywords": [
     "messaging"
