@@ -11,4 +11,11 @@ addons:
     - mongodb-org-server
     - g++-4.8
 env:
-  - CXX=g++-4.8
+- CXX=g++-4.8
+deploy:
+  provider: heroku
+  api_key:
+    secure: FV3HpYFvOZ13w4EUeGMNj5RHAJNLzDdask5qld2PJiptib4r4R1fw8LSF8NhJZhzqgrA74fMi0L2/lNCJP+ud61UHi/fNXPbpvTmf29kqUjg0pX39CJrVpf16FZXrT/+lUxiKBr1PefAQ/elNF5LiSNSMBAPqyZIcW8Kpk1mb7DzGE34fBUhlkUCgW528VeJeuhvjpgvz/a/mmZywh2ARctHhzLnGcKB2+vv3NGa5RXr6TDaalDrxoyw/L9yBq/xdz8WeeFdquG30/notlSXu6IctoLfTbwNGc0Q/IuScuHyFNkvkwtlHisJg9BcwqefyPmWZUc/V94phxYWm1/4M3uiZEFbb01y68nkQLJ2QkP2K2wCn0HPERKPxazbqET3x0pOt8/jO1eTncLN/hl+VXSxdN2Wwt5QaogHvNjRpnUShL40UKjb8TrchhpZv7B24c5dOKYoH4NszCXuiEVgfDWJUwrfDJ0X0JVSSwPTyHw80pq+13+R8nTqchGzfptnpYpJugTeA2FTD66F4N04RoYujtF40Ol96g0J516bfOUjPgYyOSrkkUCDTERL3thijkpMxuk90NLaW/Z6mzpg8euDLRlbYf8Nvf/vlfeJ0Xsnbi0U8f9/tylEx57CCSR5WR+tppBspU6qKzh2XG8AVdnE085EgsKM/G4BFlLoBUM=
+  app: vert-baguette-29871
+  on:
+    repo: seanjun21/sup-travis
