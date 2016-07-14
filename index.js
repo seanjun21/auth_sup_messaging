@@ -7,6 +7,7 @@ var Message = require( './models/message' );
 var bcrypt = require( 'bcrypt' );
 var passport = require( 'passport' );
 var BasicStrategy = require( 'passport-http' ).BasicStrategy;
+var auto = require( 'run-auto' );
 
 var app = express();
 
@@ -184,11 +185,42 @@ app.put( '/users/:userID', jsonParser, function( request, response ) {
   }, {
     username: request.body.username
   }, function( error, user ) {
+
+    // auto( {
+    //   getData: function( callback ) {
+    //     console.log( 'in getData' );
+    //     // async code to get some data 
+    //     callback( null, 'data', 'converted to array' );
+    //   },
+    //   makeFolder: function( callback ) {
+    //     console.log( 'in makeFolder' );
+    //     // async code to create a directory to store a file in 
+    //     // this is run at the same time as getting the data 
+    //     callback( null, 'folder' );
+    //   },
+    //   writeFile: [ 'getData', 'makeFolder', function( results, callback ) {
+    //     console.log( 'in writeFile', JSON.stringify( results ) );
+    //     // once there is some data and the directory exists, 
+    //     // write the data to a file in the directory 
+    //     callback( null, 'filename' );
+    //   } ],
+    //   emailLink: [ 'writeFile', function( results, callback ) {
+    //     console.log( 'in emailLink', JSON.stringify( results ) );
+    //     // once the file is written let's email a link to it... 
+    //     // results.writeFile contains the filename returned by writeFile. 
+    //     callback( null, { file: results.writeFile, email: 'user@example.com' } );
+    //   } ]
+    // }, function( err, results ) {
+    //   console.log( 'err = ', err );
+    //   console.log( 'results = ', results );
+    // } );
+
     // if there is not user document with specified user ID
     if ( !user ) {
       // creates a new user at specified user ID with provided username
       bcrypt.genSalt( 10, function( err, salt ) {
-        bcrypt.hash( 'password', salt, function( err, hash ) {
+        var userPassword = 'userPassword';
+        bcrypt.hash( userPassword, salt, function( err, hash ) {
           var newUser = {
             _id: request.params.userID,
             username: request.body.username,
@@ -200,10 +232,13 @@ app.put( '/users/:userID', jsonParser, function( request, response ) {
               return;
             }
           } );
+          response.json( {} );
         } );
       } );
+    } else {
+      response.json( {} );
     }
-    response.json( {} );
+
   } );
 } );
 
