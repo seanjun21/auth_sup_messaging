@@ -6,5 +6,9 @@ addons:
   apt:
     sources:
     - mongodb-3.2-precise
+    - ubuntu-toolchain-r-test
     packages:
-    - mongodb-org-server 
+    - mongodb-org-server
+    - g++-4.8
+env:
+  - CXX=g++-4.8
